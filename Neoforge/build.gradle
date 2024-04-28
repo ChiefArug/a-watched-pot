@@ -14,7 +14,7 @@ repositories {
 }
 
 base {
-    archivesName = 'watchedpot'
+    archivesName = "${project.mod_name}-neoforge-${minecraft_version}"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -37,6 +37,16 @@ runs {
     }
 }
 
+// ignore neo's compile tasks, else it compiles our common classes into the base game
+Spec<Task> notNeoTask = { Task it -> !it.name.startsWith("neo") } as Spec<Task>
+
+tasks.withType(JavaCompile).matching(notNeoTask).configureEach {
+    source(project(":Common").sourceSets.main.allSource)
+}
+
+processResources {
+    from project(":Common").sourceSets.main.resources
+}
 
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
