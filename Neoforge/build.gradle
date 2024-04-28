@@ -1,0 +1,51 @@
+plugins {
+    id 'java-library'
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.neoforged.gradle.userdev' version '7.0.109'
+}
+
+version = version
+group = group
+
+repositories {
+    mavenLocal()
+}
+
+base {
+    archivesName = 'watchedpot'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+runs {
+    configureEach {
+
+        systemProperty 'neoforge.logging.markers', 'REGISTRIES'
+        systemProperty 'neoforge.logging.console.level', 'debug'
+
+        modSource project.sourceSets.main
+    }
+
+    client {
+
+    }
+
+    server {
+        programArgument '--nogui'
+    }
+}
+
+
+dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
+    compileOnly project(":Common")
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
